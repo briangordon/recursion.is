@@ -24,9 +24,8 @@ then
 fi
 
 echo "Starting the server process."
-echo "working directory is" `pwd`
 
 # Start the server process
-daemon --name recursiond --respawn --chdir=`pwd` -- java -jar Server/target/Server-1.0-SNAPSHOT.jar
+daemon --name recursiond --respawn --chdir=`pwd` -o server_out -- java -jar Server/target/Server-1.0-SNAPSHOT.jar
 
 echo "Server process running."
