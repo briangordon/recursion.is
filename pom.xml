@@ -14,7 +14,7 @@
     </modules>
 
     <properties>
-        <mainClass>HiServer</mainClass>
+        <mainClass>is.recursion.HiServer</mainClass>
     </properties>
 
     <build>
@@ -46,7 +46,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>${mainClass}}</mainClass>
+                            <mainClass>${mainClass}</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
