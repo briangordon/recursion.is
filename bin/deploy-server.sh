@@ -1,8 +1,16 @@
 # Deployment script to be executed on the server by deploy.sh.
 
 # Compile and package the server
-mvn package
-echo "Build complete."
+mvn package > /dev/null
+
+if [ $? -ne 0 ]
+then
+    echo "The build failed! Aborting."
+    exit 1;
+fi
+
+echo "Build succeeded."
+    
 
 # Check to see if the server process is running
 daemon --name recursiond --running
@@ -16,8 +24,9 @@ then
 fi
 
 echo "Starting the server process."
+echo "working directory is" `pwd`
 
 # Start the server process
-daemon --name recursiond --respawn --chdir=`pwd` --verbose -- java -jar Server/target/Server-1.0-SNAPSHOT.jar
+daemon --name recursiond --respawn --chdir=`pwd` -- java -jar Server/target/Server-1.0-SNAPSHOT.jar
 
 echo "Server process running."
