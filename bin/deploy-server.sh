@@ -30,7 +30,10 @@ fi
 
 echo "Starting the server process..."
 
-# Start the server process
-daemon --name recursiond --respawn --chdir=`pwd` --output=server_out -- java -jar Server/target/Server-1.0-SNAPSHOT.jar
+# Start the server process. We must redirect stdin to /dev/null or else 
+# the call to "daemon" will block when running this script through fleet.
+# You could run it with ssh just fine; only fleet has this problem.
+daemon --name recursiond --respawn --chdir=`pwd` --output=server_out -- \
+       java -jar Server/target/Server-1.0-SNAPSHOT.jar < /dev/null
 
 echo "Server process running."
