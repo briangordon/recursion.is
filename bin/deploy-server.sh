@@ -1,5 +1,7 @@
 # Deployment script to be executed on the server by deploy.sh.
 
+echo "Building project..."
+
 # Compile and package the server
 mvn package > /dev/null
 
@@ -21,11 +23,14 @@ then
     
     # The server process is running so stop it
     daemon --name recursiond --stop
+
+    # Sleep to give the client process a chance to die
+    sleep 3s
 fi
 
-echo "Starting the server process."
+echo "Starting the server process..."
 
 # Start the server process
-daemon --name recursiond --respawn --chdir=`pwd` -o server_out -- java -jar Server/target/Server-1.0-SNAPSHOT.jar
+daemon --name recursiond --respawn --chdir=`pwd` --output=server_out -- java -jar Server/target/Server-1.0-SNAPSHOT.jar
 
 echo "Server process running."
