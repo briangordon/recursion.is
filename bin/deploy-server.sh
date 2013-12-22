@@ -13,4 +13,4 @@ then
 fi
 
 # Start the server process
-daemon --name recursiond --respawn -- java -jar Server/target/Server-1.0-SNAPSHOT.jar
+daemon --name recursiond --respawn --chdir=`pwd` -- java -jar Server/target/Server-1.0-SNAPSHOT.jar
