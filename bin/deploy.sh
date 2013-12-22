@@ -6,4 +6,4 @@
 # available on the public GitHub repository.
 
 fleet deploy
-fleet exec --drone \* -- bash bin/deploy-server.sh
+fleet exec --drone=\* -- bash bin/deploy-server.sh
