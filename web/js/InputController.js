@@ -89,6 +89,8 @@ define(function (require) {
             _inputBox.blur(function () {
                 _inputButton.removeClass("activeButtonAddon");
             })
+
+            _inputBox.focus();
         }
 
         ctor();
