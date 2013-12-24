@@ -22,6 +22,11 @@ define(function (require) {
         // The history of all statements which have been submitted through the input box.
         var _history = [];
 
+        // The user can use the up/down arrows to search back and forward through the history. This is the 
+        // index of the currently selected history item, where 0 is the index of the most recent item. -1 
+        // signifies that no history item is selected.
+        var _historyIndex = -1;
+
         /**
          * Function which is called on keydown within the input box.
          */
@@ -36,13 +41,25 @@ define(function (require) {
             } else if (event.which === 38) {
                 event.preventDefault();
 
-                console.log("Up");
+                if(_historyIndex + 1 < _history.length) {
+                    _historyIndex++;
+                    _inputBox.val(_history[_historyIndex]);
+                    layout.refresh();
+                }
 
             // The down key was pressed so go forward in the history
             } else if (event.which === 40) {
                 event.preventDefault();
 
-                console.log("Down");
+                if(_historyIndex >= 0) {
+                    _historyIndex--;
+                    if(_historyIndex == -1) {
+                        _inputBox.val("");
+                    } else {
+                        _inputBox.val(_history[_historyIndex]);
+                    }
+                    layout.refresh();
+                }
             }
         }
 
@@ -57,7 +74,8 @@ define(function (require) {
                 return;
             }
 
-            _history.push(value);
+            _historyIndex = -1;
+            _history.unshift(value);
 
             // Clear the box right away to give the illusion of responsiveness
             _inputBox.val("");
