@@ -26,6 +26,8 @@ textarea {
 #noscriptError {
     font-size: 200%;
     font-weight: bold;
+    z-index: 100;
+    background-color: white;
 }
 
 /* This emulates form-control:focus from bootstrap.css. */
