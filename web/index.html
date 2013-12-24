@@ -4,33 +4,29 @@
         <meta charset="UTF-8">
         <title>recursion.is</title>
 
+        <!-- Styles -->
         <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="main.css">
 
-        <script src="https://code.jquery.com/jquery.js"></script>
-        <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-
-        <style>
-            #container {
-                margin-top: 100px;
-                text-align: center;
-                font-size: 100px;
-                line-height: 1;
-            }
-        </style>
-
-        <script>
-            $(function () {
-                var messages = ["easy", "fun", "powerful", "expressive", "important", "valuable", "interesting", "useful"];
-                var randMessage = messages[Math.floor(Math.random() * messages.length)];
-                $("#container").text(randMessage);
-            });
-        </script>
+        <!-- Include application via requirejs -->
+        <script data-main="js/main" src="js/lib/require.js"></script>
     </head>
     <body>
-        <div>
-            <h1 id="container">
-            </h1>
+        <noscript>
+            <div id="noscriptError" class="pageFiller">Please enable JavaScript in order to use this site.</div>
+        </noscript>
+        <div id="container" class="pageFiller">
+            <!-- Output box -->
+            <div class="form-control" id="outputBox"></div>
+
+            <!-- Query bar and button -->
+            <div id="inputContainer" class="input-group">
+              <textarea class="form-control" id="inputBox" rows="1"></textarea>
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button" id="inputButton">Execute</button>
+              </span>
+            </div>
         </div>
     </body>
 </html>
