@@ -22,7 +22,7 @@
 }
 
 #inputBox {
-
+    resize: none;
 }
 
 #noscriptError {
