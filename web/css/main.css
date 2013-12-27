@@ -23,6 +23,7 @@
 
 #inputBox {
     resize: none;
+    height: 1em;
 }
 
 #noscriptError {
