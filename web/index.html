@@ -7,7 +7,8 @@
         <!-- Styles -->
         <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
         <!--<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">-->
-        <link rel="stylesheet" href="main.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/highlight.css">
 
         <!-- Include application via requirejs -->
         <script data-main="js/main" src="js/lib/require.js"></script>
@@ -19,11 +20,11 @@
 
         <div id="container" class="pageFiller">
             <!-- Output box -->
-            <div class="form-control" id="outputBox"></div>
+            <div class="form-control box" id="outputBox"></div>
 
             <!-- Query bar and button -->
             <div id="inputContainer" class="input-group">
-              <textarea class="form-control" id="inputBox" rows="1"></textarea>
+              <div class="form-control box" id="inputBox" contenteditable="true"></div>
               <span class="input-group-btn">
                 <button class="btn btn-default" type="button" id="inputButton">Execute</button>
               </span>

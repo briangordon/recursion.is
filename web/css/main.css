@@ -8,21 +8,21 @@
     padding: 20px;
 }
 
-#outputBox {
-    background-color: #fff;
-    margin-bottom: 10px;
-    overflow: auto;
+.box {
     font-family: monospace;
     white-space: pre-wrap;
     word-wrap: break-word;
     word-break: break-all;
 }
 
-textarea {
-    resize: none;
-    word-wrap: break-word;
-    word-break: break-all;
-    font-family: monospace;
+#outputBox {
+    background-color: #fff;
+    margin-bottom: 10px;
+    overflow: auto;
+}
+
+#inputBox {
+
 }
 
 #noscriptError {
@@ -38,8 +38,4 @@ textarea {
     outline: 0;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
             box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
-}
-
-.echoedStatement {
-    color: #999;
 }
