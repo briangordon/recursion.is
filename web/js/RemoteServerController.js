@@ -15,9 +15,11 @@ define(function (require) {
         /**
          * Receive a statement to be submitted to the server for evaluation.
          */
-        _this.submit = function (statement) {
-            // For now just echo the statement right back into the outputController
-            outputController.write(statement);
+        _this.submit = function (statement, callback) {
+            // First echo the statement into the outputController
+            outputController.write("> " + statement);
+
+            callback();
         }
     }
 });

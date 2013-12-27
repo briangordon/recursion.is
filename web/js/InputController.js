@@ -27,6 +27,10 @@ define(function (require) {
         // signifies that no history item is selected.
         var _historyIndex = -1;
 
+        // After submitting a statement, we "lock" until a response comes back. During this time the user 
+        // cannot submit another statement, although they can type freely.
+        var _locked = false;
+
         /**
          * Function which is called on keydown within the input box.
          */
@@ -67,6 +71,13 @@ define(function (require) {
          * Submit the current contents of the input box and clear it.
          */
         function submitStatement() {
+            // Don't do anything if we're already waiting on another statement.
+            if(_locked) {
+                return;
+            }
+
+            lock();
+
             var value = _inputBox.val();
 
             // Don't do anything if the user didn't input anything.
@@ -84,7 +95,22 @@ define(function (require) {
             layout.refresh();
 
             // Now submit the statement to the RemoteServerController
-            remote.submit(value);
+            remote.submit(value, unlock);
+        }
+
+        /**
+         * Prevent the user from submitting any new statements until the unlock method is called.
+         */
+        function lock() {
+            _locked = true;
+
+            _inputButton.disabled = true;
+        }
+
+        function unlock() {
+            _locked = false;
+
+            _inputButton.disabled = false;
         }
 
         /**
