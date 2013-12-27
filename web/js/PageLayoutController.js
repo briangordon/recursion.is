@@ -61,6 +61,10 @@ define(function (require) {
 
             _inputBox.autosize({callback: inputResizedCallback});
             $(window).resize(resizeOutputBox);
+
+            // Trigger the resize event manually in case the browser doesn't do it automatically. When I viewed the page on an old android 
+            // tablet the resize didn't seem to occur on page load like it does in Chrome.
+            $(window).resize();
         }
 
         ctor();
