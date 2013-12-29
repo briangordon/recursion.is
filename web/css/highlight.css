@@ -1,3 +1,8 @@
 .echoedStatement {
     color: #999;
 }
+
+.myBadge {
+    margin-left: -5px;
+    margin-right: 5px;
+}

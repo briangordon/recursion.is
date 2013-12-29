@@ -1,5 +1,8 @@
 "use strict";
 
+// Global variables for debug access in the JavaScript console.
+var LAYOUT, OUTPUT, REMOTE, INPUT;
+
 define(function (require) {
     var PageLayoutController   = require("PageLayoutController");
     var OutputController       = require("OutputController");
@@ -18,5 +21,11 @@ define(function (require) {
         // RemoteServerController because it's not super explicitly clear that registerInput will have been 
         // called by the time the 
         remote.start();
+
+        // Set debug variables
+        LAYOUT = layout;
+        OUTPUT = output;
+        REMOTE = remote;
+        INPUT = input;
     });
 });
