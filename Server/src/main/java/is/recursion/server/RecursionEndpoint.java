@@ -3,10 +3,7 @@ package is.recursion.server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
+import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 
@@ -23,8 +20,13 @@ public class RecursionEndpoint {
     }
 
     @OnMessage
-    public String echo(String message) {
+    public String onMessage(String message, Session session) {
         return message;
+    }
+
+    @OnClose
+    public void onClose(CloseReason reason, Session session) {
+        logger.info("WebSocket close for {}", reason.getReasonPhrase());
     }
 
     @OnError

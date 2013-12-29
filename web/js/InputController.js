@@ -4,8 +4,8 @@
  * Handles input from the input box.
  *
  * Parameters:
- *  layout        - An instance of PageLayoutController which will be notified when we clear the input box.
- *  remote        - An instance of RemoteServerController which will be used when the user submits a statement.
+ *  _layout        - An instance of PageLayoutController which will be notified when we clear the input box.
+ *  _remote        - An instance of RemoteServerController which will be used when the user submits a statement.
  *  inputBoxID    - The DOM ID string of the small input textarea.
  *  inputButtonID - The DOM ID string of the button to the right of the input box.
  */
@@ -13,11 +13,11 @@
 define(function (require) {
     var $ = require("jquery");
 
-    return function (layout, remote, inputBoxID, inputButtonID) {
+    return function (_layout, _remote, inputBoxID, inputButtonID) {
         var _this = this;
 
-        var _inputBox;
-        var _inputButton;
+        var _inputBox = $(document.getElementById(inputBoxID));
+        var _inputButton = $(document.getElementById(inputButtonID));
 
         // The history of all statements which have been submitted through the input box.
         var _history = [];
@@ -26,10 +26,6 @@ define(function (require) {
         // index of the currently selected history item, where 0 is the index of the most recent item. -1 
         // signifies that no history item is selected.
         var _historyIndex = -1;
-
-        // After submitting a statement, we "lock" until a response comes back. During this time the user 
-        // cannot submit another statement, although they can type freely.
-        var _locked = false;
 
         /**
          * Function which is called on keydown within the input box.
@@ -48,7 +44,7 @@ define(function (require) {
                 if(_historyIndex + 1 < _history.length) {
                     _historyIndex++;
                     _inputBox.val(_history[_historyIndex]);
-                    layout.refresh();
+                    _layout.refresh();
                 }
 
             // The down key was pressed so go forward in the history
@@ -62,7 +58,7 @@ define(function (require) {
                     } else {
                         _inputBox.val(_history[_historyIndex]);
                     }
-                    layout.refresh();
+                    _layout.refresh();
                 }
             }
         }
@@ -71,13 +67,6 @@ define(function (require) {
          * Submit the current contents of the input box and clear it.
          */
         function submitStatement() {
-            // Don't do anything if we're already waiting on another statement.
-            if(_locked) {
-                return;
-            }
-
-            lock();
-
             var value = _inputBox.val();
 
             // Don't do anything if the user didn't input anything.
@@ -85,40 +74,56 @@ define(function (require) {
                 return;
             }
 
+            // Don't do anything if we're already waiting on another statement.
+            if(_remote.isLocked()) {
+                return;
+            }
+
+            // Add this statement to the local history.
             _historyIndex = -1;
             _history.unshift(value);
 
-            // Clear the box right away to give the illusion of responsiveness
+            // Clear the box right away to give the illusion of responsiveness.
             _inputBox.val("");
 
-            // Notify the PageLayoutController that we've altered the contents of the input box
-            layout.refresh();
+            // Notify the PageLayoutController that we've altered the contents of the input box.
+            _layout.refresh();
 
-            // Now submit the statement to the RemoteServerController
-            remote.submit(value, unlock);
+            // Now submit the statement to the RemoteServerController.
+            _remote.submit(value);
         }
 
         /**
-         * Prevent the user from submitting any new statements until the unlock method is called.
+         * Disable the "Execute" button.
          */
-        function lock() {
-            _locked = true;
-
-            _inputButton.disabled = true;
+        function disableInput() {
+            _inputButton.prop("disabled", true);
         }
 
-        function unlock() {
-            _locked = false;
+        /**
+         * Re-enable the "Execute" button.
+         */
+        function enableInput() {
+            _inputButton.prop("disabled", false);
+        }
 
-            _inputButton.disabled = false;
+        /**
+         * Return a little stub object capable of enabling and disabling input. This is useful for the 
+         * RemoteServerController to be able to affect the UI.
+         */
+        function exportForRemote() {
+            return {
+                enable: enableInput,
+                disable: disableInput    
+            };
         }
 
         /**
          * Constructor
          */
         function ctor() {
-            _inputBox = $(document.getElementById(inputBoxID));
-            _inputButton = $(document.getElementById(inputButtonID));
+            // Allow the remote to enable and disable input according to whether the connection is open.
+            _remote.registerInput(exportForRemote());
 
             _inputBox.keydown(keyDownHandler);
             _inputButton.click(function () {

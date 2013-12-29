@@ -2,6 +2,9 @@
 
 /**
  * Given a text string, return a div containing it.
+ *
+ * Parameters:
+ *  text - The string to format. 
  */
 
 define(function () {
