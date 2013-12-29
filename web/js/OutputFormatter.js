@@ -9,13 +9,17 @@
 
 define(function () {
     return function (text) {
-        var lineDiv = $("<div class='output-line'/>");
-        if(text.substr(0, 2) === "> ") {
+        var lineDiv = $("<div class=\"output-line\"/>");
+        if(text.substr(0, "> ".length) === "> ") {
             lineDiv.addClass("echoedStatement");
-            text = text.slice(2);
+            text = "↪ " + text.slice("> ".length);
+        } else if(text.substr(0, "ERROR ".length) === "ERROR ") {
+            var errorLabel = $("<span class=\"label label-danger myBadge\">Error</span>");
+            lineDiv.append(errorLabel);
+            text = text.slice("ERROR ".length);
         }
 
-        lineDiv.text(text);
+        lineDiv.append(document.createTextNode(text));
 
         return lineDiv;
     }

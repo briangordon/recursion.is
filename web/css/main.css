@@ -15,6 +15,10 @@
     word-break: break-all;
 }
 
+#notificationBox {
+    overflow: auto;
+}
+
 #outputBox {
     background-color: #fff;
     margin-bottom: 10px;

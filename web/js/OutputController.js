@@ -16,7 +16,7 @@ define(function (require) {
     return function (outputBoxID, maxLines) {
         var _this = this;
 
-        var _outputBox;
+        var _outputBox = $(document.getElementById(outputBoxID));
 
         // The number of lines currently displayed in the output box
         var _numLines = 0;
@@ -64,14 +64,5 @@ define(function (require) {
                 _outputBox.scrollTop(_outputBox.prop("scrollHeight") - _outputBox.height())
             }
         }
-
-        /**
-         * Constructor
-         */
-        function ctor() {
-            _outputBox = $(document.getElementById(outputBoxID));
-        }
-
-        ctor();
     }
 });
