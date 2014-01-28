@@ -4,16 +4,15 @@
  * Handles input from the input box.
  *
  * Parameters:
- *  _layout        - An instance of PageLayoutController which will be notified when we clear the input box.
- *  _remote        - An instance of RemoteServerController which will be used when the user submits a statement.
  *  inputBoxID    - The DOM ID string of the small input textarea.
  *  inputButtonID - The DOM ID string of the button to the right of the input box.
+ *  _components   - A container object containing each of the page's components
  */
 
 define(function (require) {
     var $ = require("jquery");
 
-    return function (_layout, _remote, inputBoxID, inputButtonID) {
+    return function (inputBoxID, inputButtonID, _components) {
         var _this = this;
 
         var _inputBox = $(document.getElementById(inputBoxID));
@@ -44,7 +43,7 @@ define(function (require) {
                 if(_historyIndex + 1 < _history.length) {
                     _historyIndex++;
                     _inputBox.val(_history[_historyIndex]);
-                    _layout.refresh();
+                    _components.layout.refresh();
                 }
 
             // The down key was pressed so go forward in the history
@@ -58,27 +57,15 @@ define(function (require) {
                     } else {
                         _inputBox.val(_history[_historyIndex]);
                     }
-                    _layout.refresh();
+                    _components.layout.refresh();
                 }
             }
         }
 
         /**
-         * Submit the current contents of the input box and clear it.
+         * This method will be called by the FSA if it accepts the submitted statement.
          */
-        function submitStatement() {
-            var value = _inputBox.val();
-
-            // Don't do anything if the user didn't input anything.
-            if(value.length === 0 || value === " ") {
-                return;
-            }
-
-            // Don't do anything if we're already waiting on another statement.
-            if(_remote.isLocked()) {
-                return;
-            }
-
+        _this.statementAccepted = function () {
             // Add this statement to the local history.
             _historyIndex = -1;
             _history.unshift(value);
@@ -87,44 +74,48 @@ define(function (require) {
             _inputBox.val("");
 
             // Notify the PageLayoutController that we've altered the contents of the input box.
-            _layout.refresh();
+            _components.layout.refresh();
+        }
 
-            // Now submit the statement to the RemoteServerController.
-            _remote.submit(value);
+        /**
+         * Submit the current contents of the input box.
+         */
+        function submitStatement() {
+            var value = _inputBox.val();
+
+            // Don't trigger the whole userInput event stuff if it's just an empty string.
+            if(value.length === 0 || value === " " || value === "  ") {
+                return;
+            }
+
+            _components.fsa.userInput(value);
         }
 
         /**
          * Disable the "Execute" button.
          */
-        function disableInput() {
+        _this.disableInput = function () {
             _inputButton.prop("disabled", true);
         }
 
         /**
          * Re-enable the "Execute" button.
          */
-        function enableInput() {
+        _this.enableInput = function () {
             _inputButton.prop("disabled", false);
         }
 
         /**
-         * Return a little stub object capable of enabling and disabling input. This is useful for the 
-         * RemoteServerController to be able to affect the UI.
+         * Focus on the input box.
          */
-        function exportForRemote() {
-            return {
-                enable: enableInput,
-                disable: disableInput    
-            };
+        _this.refocus = function () {
+            _inputBox.focus();
         }
 
         /**
          * Constructor
          */
         function ctor() {
-            // Allow the remote to enable and disable input according to whether the connection is open.
-            _remote.registerInput(exportForRemote());
-
             _inputBox.keydown(keyDownHandler);
             _inputButton.click(function () {
                 _inputBox.focus();
@@ -137,9 +128,11 @@ define(function (require) {
 
             _inputBox.blur(function () {
                 _inputButton.removeClass("activeButtonAddon");
-            })
+            });
 
-            _inputBox.focus();
+            _this.disableInput();
+
+            _this.refocus();
         }
 
         ctor();

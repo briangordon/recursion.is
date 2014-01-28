@@ -4,15 +4,14 @@
  * Creates banner notices across the top of the screen.
  *
  * Parameters:
- *  noticeID - The DOM ID string of the container where notices will appear
- *  _layout  - An instance of PageLayoutController which will be notified when we add a notification 
- *             or when the user closes a notification.
+ *  noticeID    - The DOM ID string of the container where notices will appear
+ *  _components - A container object containing references to each of the page's components
  */
 
 define(function (require) {
     require("bootstrap");
 
-    return function (noticeID, _layout) {
+    return function (noticeID, _components) {
         var _this = this;
 
         var _noticeContainer = $(document.getElementById(noticeID));
@@ -51,11 +50,14 @@ define(function (require) {
                 notification.remove();
 
                 // Resize the output box to fill the space left by the closed alert.
-                _layout.refreshJustOutputBox();
+                _components.layout.refreshJustOutputBox();
+
+                // Focus back inside the input box
+                _components.input.refocus();
             });
 
             _noticeContainer.append(notification);
-            _layout.refreshJustOutputBox();
+            _components.layout.refreshJustOutputBox();
         }
     }
 });

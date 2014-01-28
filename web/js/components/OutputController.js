@@ -11,7 +11,7 @@
 
 define(function (require) {
     var $      = require("jquery");
-    var format = require("OutputFormatter");
+    var format = require("util/OutputFormatter");
 
     return function (outputBoxID, maxLines) {
         var _this = this;

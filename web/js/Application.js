@@ -1,34 +1,42 @@
 "use strict";
 
-// Global variables for debug access in the JavaScript console.
-var LAYOUT, ALERT, OUTPUT, REMOTE, INPUT;
+// Global variable for debug access in the JavaScript console.
+var GOD;
 
 define(function (require) {
-    var PageLayoutController   = require("PageLayoutController");
-    var OutputController       = require("OutputController");
-    var InputController        = require("InputController");
-    var RemoteServerController = require("RemoteServerController");
-    var AlertController        = require("AlertController");
+    var PageLayoutController = require("components/PageLayoutController");
+    var OutputController     = require("components/OutputController");
+    var InputController      = require("components/InputController");
+    var AlertController      = require("components/AlertController");
+    var SessionController    = require("components/SessionController");
+    var WebSocketHolder      = require("components/WebSocketHolder");
+    var FSA                  = require("FSA");
 
     // Execute when the DOM is ready
     $(function () {
-        var layout = new PageLayoutController("container", "notificationBox", "outputBox", "inputBox", "inputButton");
-        var alert = new AlertController("notificationBox", layout);
-        var output = new OutputController("outputBox", 100);
-        var remote = new RemoteServerController("ws://app.recursion.is:1123", output);
-        var input = new InputController(layout, remote, "inputBox", "inputButton");
+        // ID strings used in index.html.
+        var domIDs = {
+            notification: "notificationBox",
+            output:       "outputBox",
+            inputBox:     "inputBox",
+            inputButton:  "inputButton",
+            container:    "container"
+        }
 
-        // Now that the InputController is registered with the RemoteServerController, we're ready to make 
-        // a WebSocket connection. We don't want to start making the connection during the construction of  
-        // RemoteServerController because it's not super explicitly clear that registerInput will have been 
-        // called by the time the 
-        remote.start();
+        // Container object to allow different components to easily call methods on each other.
+        var components = {};
 
-        // Set debug variables
-        LAYOUT = layout;
-        ALERT = alert;
-        OUTPUT = output;
-        REMOTE = remote;
-        INPUT = input;
+        components.layout  = new PageLayoutController(domIDs.container, domIDs.notification, domIDs.output, domIDs.inputBox, domIDs.inputButton);
+        components.alert   = new AlertController(domIDs.notification, components);
+        components.output  = new OutputController(domIDs.output, 100);
+        components.input   = new InputController(domIDs.inputBox, domIDs.inputButton, components);
+        components.session = new SessionController();
+        components.ws      = new WebSocketHolder();
+        components.fsa     = new FSA(components);
+
+        components.fsa.start();
+
+        // Set debug variable
+        GOD = components;
     });
 });
